@@ -20,14 +20,9 @@
       let
         pkgs = nixpkgs.legacyPackages.${system};
         u_pkgs = unstable-nixpkgs.legacyPackages.${system};
-        pythonEnv_unstable = u_pkgs.python312.withPackages (
-          ps: with ps; [
-            numpy
-            matplotlib
-            scipy
-            pandas
-            astropy
 
+        jupyter_pkgs = u_pkgs.python312.withPackages (
+          ps: with ps; [
             jupyter
             ipykernel
 
@@ -36,18 +31,54 @@
             jupyterlab-vim
           ]
         );
+        physics_pkgs = u_pkgs.python312.withPackages (
+          ps: with ps; [
+            numpy
+            matplotlib
+            scipy
+            pandas
+            astropy
+          ]
+        );
       in
       {
         devShells.${system}.default = pkgs.mkShell {
-          name = "Jupyter HEP Development Shell";
+          name = "Basic Physics ipynb development shell";
           buildInputs = [
-            pkgs.root
-            pythonEnv_unstable
+            jupyter_pkgs
+            physics_pkgs
+          ];
+          shellHook = ''
+            export "JUPYTER_CONFIG_DIR=/tmp"
+            python -m ipykernel install --user --name minimal-nix-environment --display-name="Nix shell"
+            jupyter lab
+          '';
+        };
+
+        devShells.${system}.minimal = pkgs.mkShell {
+          name = "Minimal Jupyter HEP Development Shell";
+          buildInputs = [
+            jupyter_pkgs
           ];
 
           shellHook = ''
             export "JUPYTER_CONFIG_DIR=/tmp"
-            python -m ipykernel install --user --name nix-environment --display-name="Python Env (Nix shell)"
+            python -m ipykernel install --user --name root-nix-environment --display-name="Minimal Nix shell"
+            jupyter lab
+          '';
+        };
+
+        devShells.${system}.root = {
+          name = "ROOT Jupyter HEP Development Shell";
+          buildInputs = [
+            jupyter_pkgs
+            physics_pkgs
+            pkgs.root
+          ];
+
+          shellHook = ''
+            export "JUPYTER_CONFIG_DIR=/tmp"
+            python -m ipykernel install --user --name root-nix-environment --display-name="ROOT Nix shell"
             jupyter lab
           '';
         };
