@@ -9,7 +9,6 @@
 
   outputs =
     {
-      self,
       nixpkgs,
       unstable-nixpkgs,
       flake-utils,
@@ -21,7 +20,7 @@
         pkgs = nixpkgs.legacyPackages.${system};
         u_pkgs = unstable-nixpkgs.legacyPackages.${system};
 
-        jupyter_pkgs = u_pkgs.python312.withPackages (
+        jupyterBase =
           ps: with ps; [
             jupyter
             ipykernel
@@ -29,59 +28,60 @@
             jupyterlab-lsp
             python-lsp-server
             jupyterlab-vim
-          ]
-        );
-        physics_pkgs = u_pkgs.python312.withPackages (
-          ps: with ps; [
-            numpy
-            matplotlib
-            scipy
-            pandas
-            astropy
-          ]
-        );
+          ];
+
+        physicsPackages =
+          ps:
+          (
+            (jupyterBase ps)
+            ++ (with ps; [
+              numpy
+              matplotlib
+              scipy
+              pandas
+              astropy
+            ])
+          );
+
+        minimal-pkgs = u_pkgs.python312.withPackages jupyterBase;
+        default-pkgs = u_pkgs.python312.withPackages physicsPackages;
+
+        installHook = kernelName: displayName: ''
+          mkdir -p /tmp/.jupyter
+          export JUPYTER_CONFIG_DIR=/tmp/.jupyter
+          python -m install \
+          --name ${kernelName} \
+          --display-name "${displayName}"
+
+          jupyter lab
+        '';
       in
       {
-        devShells.${system} = {
+        devShells = {
           default = pkgs.mkShell {
             name = "Basic Physics ipynb development shell";
             buildInputs = [
-              jupyter_pkgs
-              physics_pkgs
+              default-pkgs
             ];
-            shellHook = ''
-              export "JUPYTER_CONFIG_DIR=/tmp"
-              python -m ipykernel install --user --name minimal-nix-environment --display-name="Nix shell"
-              jupyter lab
-            '';
+            shellHook = installHook "physics-jupyter" "Nix Jupyter Environment";
           };
 
           minimal = pkgs.mkShell {
             name = "Minimal Jupyter HEP Development Shell";
             buildInputs = [
-              jupyter_pkgs
+              minimal-pkgs
             ];
-
-            shellHook = ''
-              export "JUPYTER_CONFIG_DIR=/tmp"
-              python -m ipykernel install --user --name root-nix-environment --display-name="Minimal Nix shell"
-              jupyter lab
-            '';
+            shellHook = installHook "minimal-jupyter" "Minimal Jupyter Environment";
           };
 
           root = {
             name = "ROOT Jupyter HEP Development Shell";
             buildInputs = [
-              jupyter_pkgs
-              physics_pkgs
+              default-pkgs
               pkgs.root
             ];
 
-            shellHook = ''
-              export "JUPYTER_CONFIG_DIR=/tmp"
-              python -m ipykernel install --user --name root-nix-environment --display-name="ROOT Nix shell"
-              jupyter lab
-            '';
+            shellHook = installHook "ROOT-jupyter" "ROOT Environment";
           };
         };
       }
