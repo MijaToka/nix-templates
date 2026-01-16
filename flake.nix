@@ -69,6 +69,12 @@
           description = "A simple flake that provides a nix-shell to run python jupyter notebooks";
           path = ./ipynb;
         };
+
+        latexmk = mkWelcomeText {
+          name = "Latex template";
+          description = "A basic latex templte";
+          path = ./latexmk;
+        };
       };
     };
 }
