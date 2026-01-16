@@ -1,10 +1,20 @@
-{ pkgs ? import <nixpkgs> { }, ... }:
+{
+  pkgs ? import <nixpkgs> { },
+  ...
+}:
 
 pkgs.stdenv.mkDerivation {
   name = "pdf";
   src = ./.;
   buildInputs = with pkgs; [
-    texliveFull
+    (texlive.combine {
+      inherit (texlive)
+        latexmk
+        scheme-basic
+        biblatex
+        biber
+        ;
+    })
   ];
   buildPhase = ''
     mkdir -p .cache/latex
