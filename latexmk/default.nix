@@ -9,10 +9,32 @@ pkgs.stdenv.mkDerivation {
   buildInputs = with pkgs; [
     (texlive.combine {
       inherit (texlive)
-        latexmk
+        # Base LaTeX
         scheme-basic
+
+        # Build tooling
+        latexmk
         biblatex
         biber
+
+        # Core math + symbols
+        collection-latex
+        collection-mathscience
+
+        # siunitx, cleveref, geometry, titlesec, sectsty, etc.
+        collection-latexextra
+
+        # graphicx, subfigure, wrapfig
+        collection-latexrecommended
+
+        # tikz, pgf
+        collection-pictures
+
+        # fontenc, pifont
+        collection-fontsrecommended
+
+        # hyperref, xcolor
+        hyperref
         ;
     })
   ];

@@ -1,0 +1,121 @@
+%################################################
+%Colors
+%################################################
+
+\newcommand{\titlecolor}{MidnightBlue}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{code}{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+\lstset{style=code}
+
+%################################################
+%Header
+%################################################
+
+\sectionfont{\color{\titlecolor}}
+\subsectionfont{\color{\titlecolor}}
+
+%################################################
+%Configuration of sections:
+%################################################
+%\titleformat{⟨command ⟩}
+            % [⟨shape⟩]
+            % {⟨format⟩}
+            % {⟨label ⟩}
+            % {⟨sep⟩}
+            % {⟨before-code⟩}
+            % [⟨after-code⟩]
+% Chapter #######################################
+\titleformat{\chapter}
+            [block]
+            {\normalfont\LARGE\bfseries\centering\color{\titlecolor}}
+            {\large{Chapter \thechapter}\break}
+            {0pt}
+            {}
+            [\centering\underlineChapter]
+\titlespacing{\chapter}{0pt}{10pt}{10pt}
+% Unnumbered Chapter ###########################
+\titleformat{name=\chapter,numberless}
+            [block]
+            {\normalfont\LARGE\bfseries\centering\color{\titlecolor}}
+            {}
+            {0pt}
+            {}
+            [\centering\underlineChapter]           
+
+\newcommand{\underlineChapter}[0]{
+    \begin{tikzpicture}[every node/.style={kite, draw=none, scale=0.5}]
+        \node[kite vertex angles=90 and 70,fill=\titlecolor, scale=0.5] at (0,-0.20){};
+        \node[kite vertex angles=70 and 90,fill=\titlecolor, scale=0.5] at (0,0.20){};
+        \node[kite vertex angles=40 and 90,fill=\titlecolor,rotate=-90, scale=0.5] at (0.20,0){};
+        \node[kite vertex angles=40 and 90,fill=\titlecolor,rotate=90, scale=0.5] at (-0.20,0){};
+        \draw[\titlecolor,ultra thick] (-0.6,0)--(-4,0);
+        \draw[\titlecolor,ultra thick] (0.6,0)--(4,0);
+    \end{tikzpicture}
+}
+\titleformat{name=\section}
+            [hang]
+            {\normalfont\Large\bfseries\color{\titlecolor}}
+            {\fourDiamonds\hspace{5pt}\thesection\hspace{12pt}}
+            {0pt}
+            {}
+            []  
+
+\titleformat{name=\subsection}
+            [hang]
+            {\normalfont\large\bfseries\color{\titlecolor}}
+            {\hspace{3pt}\oneDiamond\hspace{10pt}\thesubsection\hspace{12pt}}
+            {0pt}
+            {}
+            []  
+\titleformat{name=\subsubsection}
+            [hang]
+            {\normalfont\large\bfseries\color{\titlecolor}}
+            {\hspace{20pt}\thesubsection\hspace{12pt}}
+            {0pt}
+            {\underline}
+            []
+\newcommand{\fourDiamonds}[0]{
+    \begin{tikzpicture}[every node/.style={diamond, draw=none, scale=0.2}]
+        \node[diamond ,fill=\titlecolor] at (-.125,0){};
+        \node[diamond ,fill=\titlecolor] at (0,-.125){};
+        \node[diamond ,fill=\titlecolor] at (0,.125){};
+        \node[diamond ,fill=\titlecolor] at (.125,0){};
+    \end{tikzpicture}
+}
+
+\newcommand{\oneDiamond}[0]{
+    \begin{tikzpicture}[every node/.style={diamond, draw=none, scale=0.3}]
+        \node[diamond , fill=\titlecolor] at (0,0){};
+    \end{tikzpicture}
+}
+
+% Bibliography style
+\bibliographystyle{unsrturl}
+
+% Margins
+\geometry{
+    a4paper,
+    total={160mm,227mm}
+}

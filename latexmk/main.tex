@@ -1,17 +1,26 @@
-\documentclass{article}
+\documentclass[a4paper,12pt]{report}
 
-\usepackage[backend=biber]{biblatex}
-\addbibresource{references.bib}
+% Load packages from external file
+\input{packages}
+\input{config}
+% Title info
+\title{Report Title}
+\author{Mijail Tokarev}
+\date{\today}
 
 \begin{document}
+\pagenumbering{roman}
+%\maketitle
+\input{Title.tex}
 
-\title{My Article}
-\author{Me}
-\date{1970-01-01}
-\maketitle
+\tableofcontents
+%\listoffigures
+\newpage
 
-\cite{key}
+\setcounter{page}{1}
+\pagenumbering{arabic}
 
-\printbibliography
+Lorem ipsum
 
+\bibliography{references}
 \end{document}
