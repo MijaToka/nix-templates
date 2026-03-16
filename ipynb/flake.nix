@@ -43,13 +43,13 @@
             ])
           );
 
-        minimal-pkgs = u_pkgs.python312.withPackages jupyterBase;
-        default-pkgs = u_pkgs.python312.withPackages physicsPackages;
+        minimal-pkgs = u_pkgs.python313.withPackages jupyterBase;
+        default-pkgs = u_pkgs.python313.withPackages physicsPackages;
 
         installHook = kernelName: displayName: ''
           mkdir -p /tmp/.jupyter
           export JUPYTER_CONFIG_DIR=/tmp/.jupyter
-          python -m install \
+          python -m ipykernel install --user \
           --name ${kernelName} \
           --display-name "${displayName}"
 
@@ -74,7 +74,7 @@
             shellHook = installHook "minimal-jupyter" "Minimal Jupyter Environment";
           };
 
-          root = {
+          root = pkgs.mkShell {
             name = "ROOT Jupyter HEP Development Shell";
             buildInputs = [
               default-pkgs
