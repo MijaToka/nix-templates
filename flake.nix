@@ -75,6 +75,11 @@
           description = "A basic latex templte";
           path = ./latexmk;
         };
+        cpp = mkWelcomeText {
+          name = "C++ template";
+          description = "A basic C++ template with CMake";
+          path = ./cpp;
+        };
       };
     };
 }
